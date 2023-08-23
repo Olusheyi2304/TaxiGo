@@ -1,6 +1,7 @@
 import React from "react";
 import AutocompleteAddress from "./AutocompleteAddress";
 import Cars from "./Cars";
+import Cards from "./Cards";
 
 function Booking() {
   return (
@@ -9,6 +10,7 @@ function Booking() {
       <div className="border-[1px] p-3 rounded-md h-[70vh]">
         <AutocompleteAddress />
         <Cars />
+        <Cards />
       </div>
     </div>
   );
