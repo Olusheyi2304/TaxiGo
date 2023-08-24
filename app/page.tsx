@@ -1,4 +1,5 @@
 import Booking from "@/components/Booking/Booking";
+import MapBoxMap from "@/components/Map/MapBoxMap";
 
 export default function Home() {
   return (
@@ -7,7 +8,9 @@ export default function Home() {
         <div>
           <Booking />
         </div>
-        <div className="col-span-2 order-first md:order-last">Map</div>
+        <div className="col-span-2 order-first md:order-last">
+          <MapBoxMap />
+        </div>
       </div>
     </div>
   );
