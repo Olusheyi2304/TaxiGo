@@ -1,10 +1,26 @@
 "use client";
+import { DestinationCordinateContext } from "@/context/DestinationCordinateContext";
+import { SourceCordinateContext } from "@/context/SourceCordinateContext";
+import { log } from "console";
 import React, { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+const MAPBOX_RETRIVE_URL =
+  "https://api.mapbox.com/search/searchbox/v1/retrieve/";
+const session_token = { uuidv4 };
+console.log(session_token);
 
 function AutocompleteAddress() {
   const [source, setSource] = useState<any>();
   const [sourceChange, setSourceChange] = useState<any>(false);
   const [destinationChange, setDestinationChange] = useState<any>(false);
+
+  const { sourceCordinates, setSourceCordinates } = useContext(
+    SourceCordinateContext
+  );
+  const { destinationCordinates, setdestinationCordinates } = useContext(
+    DestinationCordinateContext
+  );
 
   const [addressList, setAddressList] = useState<any>([]);
   const [destination, setDistination] = useState<any>();
@@ -35,6 +51,48 @@ function AutocompleteAddress() {
     setDestinationChange(false);
   };
 
+  const onSourceAddressClick = async (item: any) => {
+    setSource(item.full_address);
+    setAddressList([]);
+    setSourceChange(false);
+    const res = await fetch(
+      MAPBOX_RETRIVE_URL +
+        item.mapbox_id +
+        "?session_token=" +
+        session_token +
+        "&access_token=" +
+        process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+    );
+
+    const result = await res.json();
+    setSourceCordinates({
+      lng: result.features[0].geometry.coordinates[0],
+      lat: result.features[0].geometry.coordinates[1],
+    });
+    console.log(result);
+  };
+
+  const onDestinationeAddressClick = async (item: any) => {
+    setDistination(item.full_address);
+    setAddressList([]);
+    setDestinationChange(false);
+    const res = await fetch(
+      MAPBOX_RETRIVE_URL +
+        item.mapbox_id +
+        "?session_token=" +
+        session_token +
+        "&access_token=" +
+        process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+    );
+
+    const result = await res.json();
+    setSourceCordinates({
+      lng: result.features[0].geometry.coordinates[0],
+      lat: result.features[0].geometry.coordinates[1],
+    });
+    console.log(result);
+  };
+
   return (
     <div className="">
       <div className="relative">
@@ -63,7 +121,7 @@ function AutocompleteAddress() {
                 className="p-3 hover:bg-gray-100
                 cursor-pointer"
                 onClick={() => {
-                  item;
+                  onSourceAddressClick(item);
                 }}
               >
                 {item.full_address}
